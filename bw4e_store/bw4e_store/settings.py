@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "store_core.apps.StoreCoreConfig",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -57,7 +58,7 @@ ROOT_URLCONF = "bw4e_store.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'store_core' / 'templates'],
+        "DIRS": [], # Removed BASE_DIR / 'store_core' / 'templates'
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -124,6 +125,13 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Redirect URLs for login and logout
-LOGIN_REDIRECT_URL = '/store/home/'
-LOGOUT_REDIRECT_URL = '/accounts/login/' # Or a different page like '/' if you have a public landing page
+# Redirect URLs for login and logout (frontend specific, now removed)
+# LOGIN_REDIRECT_URL = '/store/home/'
+# LOGOUT_REDIRECT_URL = '/accounts/login/' # Or a different page like '/' if you have a public landing page
+
+# Django REST Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ]
+}

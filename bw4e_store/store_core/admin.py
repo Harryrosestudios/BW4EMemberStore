@@ -1,6 +1,11 @@
 from django.contrib import admin
 from .models import Partner, Product, Redemption
 
+# Customize Admin Site Titles
+admin.site.site_header = "BW4E Member Store | Admin Panel"
+admin.site.site_title = "BW4E Store Admin" # More concise for browser tabs
+admin.site.index_title = "Welcome to BW4E Store Administration"
+
 @admin.register(Partner)
 class PartnerAdmin(admin.ModelAdmin):
     list_display = ('name', 'website')

@@ -20,6 +20,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("accounts/", include("django.contrib.auth.urls")), # For login, logout, password management
-    path("store/", include("store_core.urls")), # App-specific URLs
+    # path("accounts/", include("django.contrib.auth.urls")), # For login, logout, password management (frontend)
+    path("store/", include("store_core.urls")), # App-specific URLs (will contain API urls)
 ]
