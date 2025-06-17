@@ -1,0 +1,46 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Products - BW4E Store{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Product Catalog</h1>
+    <a href="{% url 'store_core:home' %}" class="btn btn-outline-secondary">Back to Home</a>
+  </div>
+
+  {% if products %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      {% for product in products %}
+        <div class="col">
+          <div class="card h-100">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+              <img src="https://via.placeholder.com/300x200.png?text=No+Image" class="card-img-top" alt="No image available" style="height: 200px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text"><small class="text-muted">{{ product.partner.name }} - {{ product.get_product_type_display }}</small></p>
+              <p class="card-text flex-grow-1">{{ product.description|truncatewords:20 }}</p>
+              {% if product.stock is not None %}
+                <p class="card-text">
+                  {% if product.stock > 0 %}
+                    <span class="badge bg-success">In Stock: {{ product.stock }}</span>
+                  {% else %}
+                    <span class="badge bg-danger">Out of Stock</span>
+                  {% endif %}
+                </p>
+              {% endif %}
+              <a href="{% url 'store_core:product_detail' pk=product.pk %}" class="btn btn-primary mt-auto">View Details</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info" role="alert">
+      No products are currently available.
+    </div>
+  {% endif %}
+
+{% endblock %}

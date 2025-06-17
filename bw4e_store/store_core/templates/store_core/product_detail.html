@@ -1,0 +1,78 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{ product.name }} - BW4E Store{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+  <div class="col-md-7">
+    <h1 class="display-5">{{ product.name }}</h1>
+    <p class="lead">Offered by: <strong>{{ product.partner.name }}</strong>
+      {% if product.partner.website %}
+        (<a href="{{ product.partner.website }}" target="_blank">Visit website</a>)
+      {% endif %}
+    </p>
+    <p><span class="badge bg-secondary">{{ product.get_product_type_display }}</span></p>
+
+    <h4 class="mt-4">Description</h4>
+    <p>{{ product.description|linebreaks }}</p>
+
+    <h4 class="mt-4">Details & Terms</h4>
+    <ul class="list-group list-group-flush">
+      {% if product.terms_and_conditions %}
+        <li class="list-group-item"><strong>Terms & Conditions:</strong><br>{{ product.terms_and_conditions|linebreaksbr }}</li>
+      {% endif %}
+      <li class="list-group-item"><strong>Redeemable Once:</strong> {{ product.redeemable_once|yesno:"Yes, only once,No, multiple times" }}</li>
+      {% if product.available_from %}
+        <li class="list-group-item"><strong>Available From:</strong> {{ product.available_from|date:"F j, Y, P" }}</li>
+      {% endif %}
+      {% if product.available_to %}
+        <li class="list-group-item"><strong>Available Until:</strong> {{ product.available_to|date:"F j, Y, P" }}</li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <div class="col-md-5">
+    {% if product.image %}
+      <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded shadow-sm mb-3">
+    {% else %}
+      <img src="https://via.placeholder.com/400x300.png?text={{product.name}}" alt="{{ product.name }}" class="img-fluid rounded shadow-sm mb-3">
+    {% endif %}
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Redeem This Product</h4>
+            {% if product.stock is not None %}
+                <p class="card-text">
+                    {% if product.stock > 5 %}
+                        <span class="badge bg-success">In Stock: {{ product.stock }} available</span>
+                    {% elif product.stock > 0 %}
+                        <span class="badge bg-warning">Low Stock: Only {{ product.stock }} left!</span>
+                    {% else %}
+                        <span class="badge bg-danger">Out of Stock</span>
+                    {% endif %}
+                </p>
+            {% endif %}
+
+            {% if product.stock is None or product.stock > 0 %}
+                <form method="POST" action="{% url 'store_core:redeem_product' product_id=product.pk %}">
+                    {% csrf_token %}
+                    {# Add notes field if you want users to add notes during redemption #}
+                    {# <div class="mb-3"> #}
+                    {#   <label for="redemptionNotes" class="form-label">Notes (Optional):</label> #}
+                    {#   <textarea class="form-control" id="redemptionNotes" name="notes" rows="2"></textarea> #}
+                    {# </div> #}
+                    <button type="submit" class="btn btn-primary btn-lg w-100">Redeem Now</button>
+                </form>
+            {% else %}
+                <button type="button" class="btn btn-danger btn-lg w-100" disabled>Out of Stock</button>
+            {% endif %}
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4">
+  <a href="{% url 'store_core:product_list' %}" class="btn btn-outline-secondary me-2">Back to Product List</a>
+  <a href="{% url 'store_core:home' %}" class="btn btn-outline-info">Back to Home</a>
+</div>
+{% endblock %}
